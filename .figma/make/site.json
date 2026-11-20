@@ -1,0 +1,11 @@
+{
+  "title": "GREAT EMPOWER V3 — Design Foundation",
+  "description": "A responsive design system foundation for a Malaysian financial wellness platform, helping young adults explore consistent, accessible tools for learning and protection education.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
