@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Logo } from '@/components/brand/Logo'
 import { Badge } from '@/components/ui/Badge'
 import { cn } from '@/lib/cn'
@@ -14,6 +14,8 @@ import { IconsSection } from '@/showcase/sections/IconsSection'
 import { StatusSection } from '@/showcase/sections/StatusSection'
 import { LayoutsSection } from '@/showcase/sections/LayoutsSection'
 import { ModulesSection } from '@/showcase/sections/ModulesSection'
+import { ApplicationApp } from '@/app/ApplicationApp'
+import { Button } from '@/components/ui/Button'
 
 const toc = [
   { id: 'direction', label: 'Visual direction', group: 'Brand' },
@@ -52,8 +54,25 @@ function useActiveSection(sectionIds: string[]) {
   return active
 }
 
-export default function App() {
+function FoundationApp() {
   const active = useActiveSection(ids)
+  const categoryNavRef = useRef<HTMLElement>(null)
+  const [categoryHasMore, setCategoryHasMore] = useState(false)
+
+  useEffect(() => {
+    const nav = categoryNavRef.current
+    if (!nav) return
+    const updateScrollAffordance = () => {
+      setCategoryHasMore(nav.scrollWidth > nav.clientWidth && nav.scrollLeft + nav.clientWidth < nav.scrollWidth - 8)
+    }
+    updateScrollAffordance()
+    nav.addEventListener('scroll', updateScrollAffordance, { passive: true })
+    window.addEventListener('resize', updateScrollAffordance)
+    return () => {
+      nav.removeEventListener('scroll', updateScrollAffordance)
+      window.removeEventListener('resize', updateScrollAffordance)
+    }
+  }, [])
 
   useEffect(() => {
     // Keep the active chip visible in the mobile section bar.
@@ -65,29 +84,46 @@ export default function App() {
   }, [active])
 
   return (
-    <div className="min-h-screen bg-canvas">
+    <div className="min-h-screen overflow-x-hidden bg-canvas">
       {/* Mobile / tablet header */}
       <header className="sticky top-0 z-30 border-b border-line bg-surface/95 backdrop-blur lg:hidden">
-        <div className="flex h-14 items-center justify-between px-4">
-          <Logo size="sm" />
-          <Badge tone="teal">System v3.0</Badge>
+        <div className="flex h-[60px] items-center justify-between px-3 sm:px-4">
+          <Logo size="sm" className="max-w-[170px] sm:max-w-[160px]" />
+          <div className="flex items-center gap-2">
+            <Button size="sm" variant="primary" onClick={() => { window.location.hash = 'app/home' }}>
+              Open app
+            </Button>
+            <Badge tone="teal" className="hidden sm:inline-flex">System v3.0</Badge>
+          </div>
         </div>
-        <nav aria-label="Sections" className="scrollbar-none relative flex gap-1.5 overflow-x-auto px-4 pb-3">
-          {toc.map((t) => (
+        <div className="relative">
+          <nav
+            ref={categoryNavRef}
+            aria-label="Sections"
+            className="scrollbar-none flex gap-1.5 overflow-x-auto px-3 pb-2 touch-pan-x overscroll-x-contain sm:px-4"
+          >
+            {toc.map((t) => (
             <a
               key={t.id}
               id={`chip-${t.id}`}
               href={`#${t.id}`}
               aria-current={active === t.id ? 'true' : undefined}
               className={cn(
-                'inline-flex h-9 shrink-0 items-center rounded-full px-3.5 text-body-sm font-medium transition-colors',
+                'inline-flex h-12 shrink-0 items-center whitespace-nowrap rounded-full px-3.5 text-body-sm font-medium transition-colors',
                 active === t.id ? 'bg-navy-900 text-white' : 'bg-sunken text-ink-secondary hover:text-ink',
               )}
             >
               {t.label}
             </a>
-          ))}
-        </nav>
+            ))}
+          </nav>
+          {categoryHasMore && (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute bottom-2 right-0 h-12 w-10 bg-gradient-to-l from-surface via-surface/90 to-transparent"
+            />
+          )}
+        </div>
       </header>
 
       <div className="mx-auto flex max-w-[1440px]">
@@ -126,10 +162,13 @@ export default function App() {
           </nav>
           <div className="border-t border-line p-4">
             <p className="text-caption text-ink-muted">Independent concept. Not an official Great Eastern product.</p>
+            <Button size="sm" variant="primary" fullWidth className="mt-3" onClick={() => { window.location.hash = 'app/home' }}>
+              Open application
+            </Button>
           </div>
         </aside>
 
-        <main className="min-w-0 flex-1 px-4 md:px-8 xl:px-12">
+        <main className="min-w-0 flex-1 px-3 sm:px-4 md:px-8 xl:px-12">
           <div className="mx-auto max-w-[1200px]">
             <DirectionSection />
             <ColorSection />
@@ -164,4 +203,23 @@ export default function App() {
       </div>
     </div>
   )
+}
+
+export default function App() {
+  const [isApplication, setIsApplication] = useState(() => {
+    const hash = window.location.hash
+    return !hash || hash.startsWith('#app/')
+  })
+
+  useEffect(() => {
+    const onHashChange = () => {
+      const hash = window.location.hash
+      if (!hash || hash.startsWith('#app/')) setIsApplication(true)
+      else if (hash === '#foundation') setIsApplication(false)
+    }
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
+  return isApplication ? <ApplicationApp /> : <FoundationApp />
 }

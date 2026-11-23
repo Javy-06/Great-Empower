@@ -44,7 +44,7 @@ export function LogoMark({
  * Includes the lion, wordmark and tagline.
  */
 export function Logo({
-  tone: _tone = 'navy',
+  tone = 'navy',
   size = 'md',
   className,
 }: LogoProps) {
@@ -62,7 +62,9 @@ export function Logo({
       )}
     >
       <img
-        src="/images/great-empower-horizontal.png"
+        src={tone === 'white'
+          ? '/images/great-empower-horizontal-white.png'
+          : '/images/great-empower-horizontal.png'}
         alt="GREAT EMPOWER — Empowering You to Protect Your Tomorrow"
         width={width}
         className="block h-auto max-w-full object-contain"

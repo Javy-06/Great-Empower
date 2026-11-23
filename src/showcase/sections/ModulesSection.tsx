@@ -126,8 +126,8 @@ function Preview({ k }: { k: ModuleKey }) {
       )
     case 'lifetrack':
       return (
-        <div className="grid gap-4 rounded-3xl bg-[linear-gradient(135deg,var(--color-teal-50),var(--color-navy-50))] p-5 md:grid-cols-[1.2fr_1fr]">
-          <div>
+        <div className="grid gap-4 rounded-3xl bg-[linear-gradient(135deg,var(--color-teal-50),var(--color-navy-50))] p-3 sm:p-5 md:grid-cols-[1.2fr_1fr]">
+          <div className="min-w-0">
             <div className="mb-3 flex items-center justify-between">
               <Badge tone="teal" variant="solid">
                 Age 24 · Year 2
@@ -136,7 +136,7 @@ function Preview({ k }: { k: ModuleKey }) {
             </div>
             <LifeTrackBoard position={4} />
           </div>
-          <div className="flex flex-col gap-3 rounded-2xl bg-surface/70 p-4">
+          <div className="grid grid-cols-2 gap-3 rounded-2xl bg-surface/70 p-3 md:flex md:flex-col">
             <p className="text-overline uppercase text-ink-muted">Your resources</p>
             {lifeTrackResources.map((r) => (
               <ResourceMeter key={r.id} {...r} />
@@ -174,7 +174,7 @@ function Preview({ k }: { k: ModuleKey }) {
       return (
         <div className="grid gap-4 lg:grid-cols-[1fr_1.4fr]">
           <WalletCard />
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {rewardCategories.map((c, i) => (
               <RewardCategoryCard key={c.id} {...c} count={[6, 9, 8, 7][i]} />
             ))}

@@ -21,7 +21,7 @@ export function LayoutsSection() {
         <Sub title="Mobile · 360–430px" description="Single column, 16px margins, 16px card gap. Rewards appears as a card and in the header.">
           <div className="mx-auto w-full max-w-[390px] overflow-hidden rounded-[36px] border-[6px] border-navy-950 bg-canvas shadow-e3">
             <MobileAppHeader title="Home" />
-            <div className="flex h-[640px] flex-col gap-4 overflow-y-auto p-4">
+            <div className="flex h-[70vh] max-h-[640px] min-h-[480px] flex-col gap-4 overflow-y-auto p-4">
               <WellnessOverviewCard />
               <RewardsEntryCard />
               <div>

@@ -4,8 +4,8 @@ import { cn } from '@/lib/cn'
 
 export function Section({ id, index, eyebrow, title, intro, children }: { id: string; index: string; eyebrow: string; title: string; intro?: ReactNode; children: ReactNode }) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-24 border-t border-line py-12 first:border-t-0 md:py-16">
-      <header className="mb-8 max-w-3xl md:mb-10">
+    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-36 border-t border-line py-8 first:border-t-0 sm:py-10 md:scroll-mt-24 md:py-16">
+      <header className="mb-6 max-w-3xl sm:mb-8 md:mb-10">
         <p className="flex items-center gap-2 text-overline uppercase text-teal-700">
           <span className="tabular-nums text-ink-muted">{index}</span>
           <span className="h-px w-6 bg-line-strong" aria-hidden />
@@ -14,7 +14,7 @@ export function Section({ id, index, eyebrow, title, intro, children }: { id: st
         <h2 id={`${id}-title`} className="mt-3 text-title text-ink md:text-display">
           {title}
         </h2>
-        {intro && <p className="mt-3 text-body-lg text-ink-secondary">{intro}</p>}
+        {intro && <p className="mt-2 text-body text-ink-secondary sm:mt-3 sm:text-body-lg">{intro}</p>}
       </header>
       <div className="flex flex-col gap-10 md:gap-12">{children}</div>
     </section>

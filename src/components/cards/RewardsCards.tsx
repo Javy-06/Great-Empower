@@ -58,8 +58,8 @@ export function VoucherCard({ category, title, points, icon: Icon, tile, locked 
               Silver tier
             </Badge>
           ) : (
-            <Button size="sm" variant="primary">
-              Redeem
+            <Button size="sm" variant="primary" disabled title="Voucher redemption is not available in this demo" aria-label={`Demo only: ${title} cannot be redeemed`}>
+              Demo only
             </Button>
           )}
         </div>

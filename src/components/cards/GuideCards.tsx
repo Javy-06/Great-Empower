@@ -4,9 +4,9 @@ import { Card } from '@/components/ui/Card'
 import { IconTile } from '@/components/ui/IconTile'
 import { cn } from '@/lib/cn'
 
-export function ArticleRow({ icon, category, title, minutes }: { icon: LucideIcon; category: string; title: string; minutes: number }) {
+export function ArticleRow({ icon, category, title, minutes, href = '#cards' }: { icon: LucideIcon; category: string; title: string; minutes: number; href?: string }) {
   return (
-    <a href="#cards" className="group flex min-h-18 items-center gap-4 rounded-2xl px-3 py-3 transition-colors hover:bg-sunken">
+    <a href={href} className="group flex min-h-18 items-center gap-4 rounded-2xl px-3 py-3 transition-colors hover:bg-sunken">
       <IconTile icon={icon} tone="neutral" size="lg" />
       <div className="min-w-0 flex-1">
         <p className="text-caption text-ink-muted">

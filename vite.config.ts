@@ -11,6 +11,11 @@ import siteConfiguration from './.figma/make/site.json'
 export default defineConfig(({ mode }) => {
   // .figma/make/deploy-preview passes `--mode development` for cached-preview builds.
   const emitSourcemaps = mode === 'development'
+  const indexingMode = process.env.GREAT_EMPOWER_INDEXING_MODE === 'public' ? 'public' : 'demo'
+  const configuredSite = {
+    ...siteConfiguration,
+    robots: { ...siteConfiguration.robots, index: indexingMode === 'public' },
+  }
 
   return {
     base: process.env.FIGMA_PUBLIC_URL ? `${process.env.FIGMA_PUBLIC_URL}/` : '/',
@@ -21,7 +26,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
 react(),
       tailwindcss(),
-      figmaSiteConfiguration(siteConfiguration),
+      figmaSiteConfiguration(configuredSite),
       figmaErrorOverlayReplay(),
       figmaReactRefreshBoundaryFallback(),
       figmaMakeKitPlugin({ storiesGlob: '/src/**/*.stories.{ts,tsx,js,jsx}' }),
@@ -100,21 +105,21 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
   const headEnd = config.customScripts?.headEnd ?? ''
   const bodyStart = config.customScripts?.bodyStart ?? ''
   const bodyEnd = config.customScripts?.bodyEnd ?? ''
-  const robotsTxt = config.robots?.index === false ? 'User-agent: *\nDisallow: /\n' : ''
+  // Keep the site crawlable so search engines can read demo mode's noindex
+  // metadata. Indexing can be enabled later with the build-time mode switch.
+  const robotsTxt = 'User-agent: *\nAllow: /\n'
 
   return {
     name: 'figma-site-configuration',
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        if (!robotsTxt || req.url?.split('?')[0] !== '/robots.txt') return next()
+        if (req.url?.split('?')[0] !== '/robots.txt') return next()
 
         res.setHeader('Content-Type', 'text/plain; charset=utf-8')
         res.end(robotsTxt)
       })
     },
     generateBundle() {
-      if (!robotsTxt) return
-
       this.emitFile({
         type: 'asset',
         fileName: 'robots.txt',
@@ -138,6 +143,8 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
         }
         if (config.robots?.index === false) {
           tags.push({ tag: 'meta', attrs: { name: 'robots', content: 'noindex, nofollow' }, injectTo: 'head' })
+        } else if (config.robots?.index === true) {
+          tags.push({ tag: 'meta', attrs: { name: 'robots', content: 'index, follow' }, injectTo: 'head' })
         }
         if (favicon) {
           tags.push({ tag: 'link', attrs: { rel: 'icon', href: favicon }, injectTo: 'head' })

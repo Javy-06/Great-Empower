@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Info } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
@@ -98,6 +99,7 @@ export function Donut({ segments, size = 140, centerLabel, centerCaption }: { se
 }
 
 export function InsightSummaryCard() {
+  const [showDetails, setShowDetails] = useState(false)
   return (
     <Card padding="md">
       <div className="flex items-start justify-between gap-3">
@@ -105,8 +107,8 @@ export function InsightSummaryCard() {
           <p className="text-overline uppercase text-ink-muted">Monthly spending mix</p>
           <h3 className="mt-0.5 text-subheading text-ink">Where your money goes</h3>
         </div>
-        <Button size="sm" variant="ghost">
-          Details
+        <Button size="sm" variant="ghost" aria-expanded={showDetails} onClick={() => setShowDetails((value) => !value)}>
+          {showDetails ? 'Hide details' : 'Details'}
         </Button>
       </div>
       <div className="mt-4">
@@ -124,6 +126,11 @@ export function InsightSummaryCard() {
       <p className="mt-4 border-t border-line pt-3 text-body-sm text-ink-secondary">
         Sample data. A common guideline is 50/30/20 — your savings share is <span className="font-semibold text-ink">6 points below</span> that reference.
       </p>
+      {showDetails && (
+        <p className="mt-3 rounded-xl bg-info-50 p-3 text-body-sm text-ink-secondary" role="status">
+          This chart uses illustrative sample figures. The categories and percentages are not based on a user account or financial assessment.
+        </p>
+      )}
     </Card>
   )
 }

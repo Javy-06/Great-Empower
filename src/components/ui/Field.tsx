@@ -85,8 +85,13 @@ export function TextField({ label, hint, error, optional, leadingIcon: Icon, pre
   )
 }
 
-export function SearchField({ placeholder = 'Search', tone = 'light', className }: { placeholder?: string; tone?: 'light' | 'sunken'; className?: string }) {
-  const [q, setQ] = useState('')
+export function SearchField({ placeholder = 'Search', tone = 'light', className, value, onChange }: { placeholder?: string; tone?: 'light' | 'sunken'; className?: string; value?: string; onChange?: (value: string) => void }) {
+  const [internalValue, setInternalValue] = useState('')
+  const q = value ?? internalValue
+  const updateValue = (nextValue: string) => {
+    setInternalValue(nextValue)
+    onChange?.(nextValue)
+  }
   const id = useId()
   return (
     <div
@@ -104,12 +109,12 @@ export function SearchField({ placeholder = 'Search', tone = 'light', className 
         id={id}
         type="search"
         value={q}
-        onChange={(e) => setQ(e.target.value)}
+        onChange={(e) => updateValue(e.target.value)}
         placeholder={placeholder}
         className="h-full min-w-0 flex-1 bg-transparent text-body text-ink outline-none placeholder:text-ink-muted [&::-webkit-search-cancel-button]:hidden"
       />
       {q && (
-        <button type="button" onClick={() => setQ('')} aria-label="Clear search" className="-mr-2 inline-flex size-9 items-center justify-center rounded-lg text-ink-muted hover:bg-sunken">
+        <button type="button" onClick={() => updateValue('')} aria-label="Clear search" className="-mr-2 inline-flex size-9 items-center justify-center rounded-lg text-ink-muted hover:bg-sunken">
           <X size={18} strokeWidth={2} aria-hidden />
         </button>
       )}
@@ -290,7 +295,7 @@ export function SegmentedControl<T extends string>({
   fullWidth?: boolean
 }) {
   return (
-    <div role="radiogroup" aria-label={label} className={cn('inline-flex h-12 rounded-xl bg-sunken p-1', fullWidth && 'flex w-full')}>
+    <div role="radiogroup" aria-label={label} className={cn('inline-flex h-12 max-w-full overflow-x-auto rounded-xl bg-sunken p-1', fullWidth && 'flex w-full')}>
       {options.map((o) => {
         const active = o.value === value
         const Icon = o.icon

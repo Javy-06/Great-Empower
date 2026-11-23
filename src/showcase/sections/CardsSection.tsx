@@ -72,7 +72,7 @@ export function CardsSection() {
             <ContinueCard title="Understanding medical cards" meta="Lesson 3 of 5 · Protection basics" progress={60} />
           </div>
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard icon={PiggyBank} tone="teal" label="Savings streak" value="12" unit="weeks" delta="+2" />
           <StatCard icon={BookOpen} tone="navy" label="Lessons completed" value="18" unit="/ 40" delta="+3" />
           <StatCard icon={ShieldCheck} tone="crimson" label="Protection topics" value="4" unit="of 6" caption="2 to explore" />

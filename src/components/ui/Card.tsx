@@ -25,7 +25,7 @@ export function Card({ variant = 'default', padding = 'md', interactive, radius 
   return (
     <div
       className={cn(
-        'relative overflow-hidden',
+        'relative w-full min-w-0 overflow-hidden',
         radius === '2xl' ? 'rounded-2xl' : 'rounded-3xl',
         variantCls[variant],
         paddingCls[padding],

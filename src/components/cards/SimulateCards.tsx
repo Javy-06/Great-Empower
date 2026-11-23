@@ -46,7 +46,7 @@ export function EmergencyFundCalculator() {
         <Slider label="Already saved" min={0} max={30000} step={500} value={saved} onChange={setSaved} format={rm} />
       </div>
       <div className="bg-navy-900 p-4 text-white">
-        <div className="flex items-end justify-between gap-4">
+        <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-caption text-white/70">Suggested target</p>
             <p className="text-numeric tabular-nums">{rm(target)}</p>
@@ -138,7 +138,7 @@ const kindCls: Record<TileKind, string> = {
 /** Illustrated board fragment used in the LifeTrack entry and module previews. */
 export function LifeTrackBoard({ position = 2 }: { position?: number }) {
   return (
-    <div className="grid grid-cols-4 gap-2" aria-label="LifeTrack board preview">
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="LifeTrack board preview">
       {boardTiles.map((t, i) => {
         // Snake layout: second row reads right-to-left.
         const order = i < 4 ? i : 7 - (i - 4)
@@ -163,11 +163,47 @@ export function LifeTrackBoard({ position = 2 }: { position?: number }) {
   )
 }
 
+/** Compact Home preview. The full playable board lives inside the LifeTrack experience in Simulate. */
+export function LifeTrackPreview() {
+  const previewTiles = [boardTiles[0], boardTiles[2], boardTiles[4], boardTiles[6]]
+  return (
+    <div aria-label="LifeTrack board preview" className="rounded-2xl border border-teal-200/70 bg-white/55 p-2.5">
+      <div className="mb-2 flex items-center justify-between">
+        <p className="text-caption font-semibold text-navy-900">Board preview</p>
+        <span className="text-[10px] font-medium text-ink-muted">Representative spaces</span>
+      </div>
+      <div className="grid grid-cols-4 gap-1.5">
+        {previewTiles.map((tile) => {
+          const Icon = tile.icon
+          return (
+            <div key={tile.label} className={cn('flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl border px-1 text-center', kindCls[tile.kind])}>
+              <Icon size={16} strokeWidth={1.75} aria-hidden />
+              <span className="text-[9px] font-semibold leading-tight">{tile.label}</span>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 export function LifeTrackEntryCard() {
+  const [position, setPosition] = useState(2)
+  const [dice, setDice] = useState<number | null>(null)
+  const [showHow, setShowHow] = useState(false)
+  const [started, setStarted] = useState(false)
+
+  const rollDice = () => {
+    const result = Math.floor(Math.random() * 6) + 1
+    setDice(result)
+    setPosition((current) => (current + result) % boardTiles.length)
+    setStarted(true)
+  }
+
   return (
     <Card padding="none" radius="3xl" className="overflow-hidden border-teal-200">
       <div className="grid gap-0 sm:grid-cols-[1.1fr_1fr]">
-        <div className="flex flex-col p-5">
+        <div className="flex min-w-0 flex-col p-4 sm:p-5">
           <div className="flex items-center gap-2">
             <Badge tone="teal" variant="solid" icon={Dice5}>
               LifeTrack
@@ -183,15 +219,27 @@ export function LifeTrackEntryCard() {
               <ResourceMeter key={r.id} {...r} />
             ))}
           </div>
-          <div className="mt-5 flex gap-2">
-            <Button variant="support" leadingIcon={Dice5}>
-              Continue game
+          <div className="mt-5 flex flex-wrap gap-2">
+            <Button variant="support" leadingIcon={Dice5} onClick={rollDice}>
+              {started ? 'Roll again' : 'Continue game'}
             </Button>
-            <Button variant="ghost">How to play</Button>
+            <Button variant="ghost" onClick={() => setShowHow((value) => !value)} aria-expanded={showHow}>
+              How to play
+            </Button>
           </div>
+          {started && (
+            <p className="mt-3 rounded-xl bg-teal-50 px-3 py-2 text-caption text-teal-800">
+              Dice: {dice} · You moved to {boardTiles[position].label}. This is a demo decision journey.
+            </p>
+          )}
+          {showHow && (
+            <p className="mt-3 text-caption text-ink-secondary">
+              Roll the dice, move across the life journey and consider how each money or health event changes your resources.
+            </p>
+          )}
         </div>
         <div className="bg-[linear-gradient(135deg,var(--color-teal-50),var(--color-navy-50))] p-5">
-          <LifeTrackBoard />
+          <LifeTrackBoard position={position} />
           <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-caption text-ink-secondary">
             <span className="inline-flex items-center gap-1">
               <span className="size-2 rounded-full bg-teal-600" /> Opportunity

@@ -17,17 +17,17 @@ export function Avatar({ initials = 'AH', size = 40, tone = 'teal' }: { initials
 }
 
 /** Mobile top app bar. `variant="root"` for tab roots, `"detail"` for pushed screens. */
-export function MobileAppHeader({ title, variant = 'root', points = 2450, onDark }: { title: string; variant?: 'root' | 'detail'; points?: number; onDark?: boolean }) {
+export function MobileAppHeader({ title, variant = 'root', points = 2450, onDark, onRewardsClick, onBack, onNotificationsClick }: { title: string; variant?: 'root' | 'detail'; points?: number; onDark?: boolean; onRewardsClick?: () => void; onBack?: () => void; onNotificationsClick?: () => void }) {
   return (
     <header className={cn('flex h-16 items-center gap-2 px-4', onDark ? 'bg-navy-900 text-white' : 'border-b border-line bg-surface')}>
       {variant === 'detail' ? (
-        <IconButton icon={ChevronLeft} label="Back" variant={onDark ? 'inverse-outline' : 'ghost'} className={cn('-ml-2', onDark && 'border-0')} />
+        <IconButton icon={ChevronLeft} label="Back" variant={onDark ? 'inverse-outline' : 'ghost'} className={cn('-ml-2', onDark && 'border-0')} onClick={onBack} />
       ) : (
         <LogoMark size={32} tone={onDark ? 'white' : 'navy'} />
       )}
       <h1 className={cn('min-w-0 flex-1 truncate text-subheading', variant === 'root' && 'ml-1', onDark ? 'text-white' : 'text-ink')}>{title}</h1>
-      <RewardsShortcut points={points} compact onDark={onDark} />
-      <IconButton icon={Bell} label="Notifications" variant={onDark ? 'inverse-outline' : 'ghost'} badge className={cn('-mr-2', onDark && 'border-0')} />
+      <RewardsShortcut points={points} compact onDark={onDark} onClick={onRewardsClick} />
+      <IconButton icon={Bell} label="Notifications" variant={onDark ? 'inverse-outline' : 'ghost'} badge className={cn('-mr-2', onDark && 'border-0')} onClick={onNotificationsClick} />
     </header>
   )
 }

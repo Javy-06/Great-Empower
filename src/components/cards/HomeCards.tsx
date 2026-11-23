@@ -58,7 +58,7 @@ export function WellnessOverviewCard({ name = 'Aisyah', score = 68 }: { name?: s
     <Card variant="navy" radius="3xl" padding="none" className="p-5 md:p-6">
       <div className="pointer-events-none absolute -right-16 -top-16 size-56 rounded-full border border-white/10" aria-hidden />
       <div className="pointer-events-none absolute -right-4 -top-4 size-32 rounded-full border border-white/10" aria-hidden />
-      <div className="relative flex items-center gap-5">
+      <div className="relative flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">
         <ProgressRing value={score} size={96} stroke={9} tone="white" onDark label={String(score)} caption="of 100" />
         <div className="min-w-0">
           <p className="text-body-sm text-white/70">Selamat pagi, {name}</p>
@@ -110,9 +110,9 @@ export function RewardsEntryCard({ points = 2450 }: { points?: number }) {
   )
 }
 
-export function QuickAction({ icon, label, tone = 'navy' }: { icon: LucideIcon; label: string; tone?: TileTone }) {
+export function QuickAction({ icon, label, tone = 'navy', onClick }: { icon: LucideIcon; label: string; tone?: TileTone; onClick?: () => void }) {
   return (
-    <button type="button" className="group flex min-h-24 flex-col items-center justify-center gap-2 rounded-2xl border border-line bg-surface p-3 transition-colors hover:border-navy-200 hover:bg-navy-50/50">
+    <button type="button" onClick={onClick} className="group flex min-h-24 flex-col items-center justify-center gap-2 rounded-2xl border border-line bg-surface p-3 transition-colors hover:border-navy-200 hover:bg-navy-50/50">
       <IconTile icon={icon} tone={tone} size="lg" />
       <span className="text-body-sm font-semibold text-ink">{label}</span>
     </button>

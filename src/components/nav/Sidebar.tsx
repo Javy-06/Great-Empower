@@ -5,11 +5,13 @@ import { primaryNav, type NavKey } from './navItems'
 import { Avatar } from './AppHeader'
 import { cn } from '@/lib/cn'
 
-export function Sidebar({ active, onChange, points = 2450, className }: { active: NavKey; onChange?: (k: NavKey) => void; points?: number; className?: string }) {
+export function Sidebar({ active, onChange, points = 2450, onRewardsClick, onLogoClick, onSettingsClick, className }: { active: NavKey; onChange?: (k: NavKey) => void; points?: number; onRewardsClick?: () => void; onLogoClick?: () => void; onSettingsClick?: () => void; className?: string }) {
   return (
     <aside className={cn('flex w-[264px] shrink-0 flex-col border-r border-line bg-surface', className)}>
       <div className="flex h-18 items-center px-6 py-5">
-        <Logo size="sm" />
+        <button type="button" aria-label="Go to Home" onClick={onLogoClick} className="inline-flex rounded-lg">
+          <Logo size="sm" />
+        </button>
       </div>
       <nav aria-label="Primary" className="px-3">
         <p className="px-3 pb-2 pt-2 text-overline uppercase text-ink-muted">Menu</p>
@@ -38,7 +40,7 @@ export function Sidebar({ active, onChange, points = 2450, className }: { active
       </nav>
 
       <div className="mt-6 px-3">
-        <button type="button" className="group w-full rounded-2xl bg-navy-900 p-4 text-left text-white transition-colors hover:bg-navy-800">
+        <button type="button" onClick={onRewardsClick} className="group w-full rounded-2xl bg-navy-900 p-4 text-left text-white transition-colors hover:bg-navy-800">
           <div className="flex items-center justify-between">
             <span className="text-overline uppercase text-white/70">Rewards Hub</span>
             <ChevronRight size={18} className="text-white/70 transition-transform group-hover:translate-x-0.5" aria-hidden />
@@ -58,9 +60,9 @@ export function Sidebar({ active, onChange, points = 2450, className }: { active
           <Avatar initials="AH" />
           <div className="min-w-0 flex-1">
             <p className="truncate text-body-sm font-semibold text-ink">Aisyah Hassan</p>
-            <p className="truncate text-caption text-ink-muted">Bronze member</p>
+            <p className="truncate text-caption text-ink-muted">Demo profile · Bronze</p>
           </div>
-          <button type="button" aria-label="Settings" className="inline-flex size-10 items-center justify-center rounded-lg text-ink-muted hover:bg-sunken">
+          <button type="button" aria-label="Settings" onClick={onSettingsClick} className="inline-flex size-10 items-center justify-center rounded-lg text-ink-muted hover:bg-sunken">
             <Settings size={18} strokeWidth={1.75} aria-hidden />
           </button>
         </div>
@@ -70,10 +72,12 @@ export function Sidebar({ active, onChange, points = 2450, className }: { active
 }
 
 /** Tablet rail: icon-only primary navigation at 80px. */
-export function NavRail({ active, onChange }: { active: NavKey; onChange?: (k: NavKey) => void }) {
+export function NavRail({ active, onChange, onLogoClick, onSignOutClick }: { active: NavKey; onChange?: (k: NavKey) => void; onLogoClick?: () => void; onSignOutClick?: () => void }) {
   return (
     <aside className="flex w-20 shrink-0 flex-col items-center gap-1 border-r border-line bg-surface py-4">
-      <LogoMark size={36} />
+      <button type="button" aria-label="Go to Home" onClick={onLogoClick} className="inline-flex rounded-lg">
+        <LogoMark size={36} />
+      </button>
       <div className="h-4" />
       {primaryNav.map(({ key, label, icon: Icon }) => {
         const isActive = key === active
@@ -92,7 +96,7 @@ export function NavRail({ active, onChange }: { active: NavKey; onChange?: (k: N
           </button>
         )
       })}
-      <button type="button" aria-label="Sign out" className="mt-auto inline-flex size-12 items-center justify-center rounded-xl text-ink-muted hover:bg-sunken">
+      <button type="button" aria-label="Sign out" title="Demo only · No signed-in account" onClick={onSignOutClick} className="mt-auto inline-flex size-12 items-center justify-center rounded-xl text-ink-muted hover:bg-sunken">
         <LogOut size={20} strokeWidth={1.75} aria-hidden />
       </button>
     </aside>
